@@ -10,6 +10,22 @@ This repository is the **whole project**: a native **SwiftUI iOS app** (`Scout-i
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="marketing/out/01_explore.png"     width="230" alt="Explore — Find your next shot">
+  <img src="marketing/out/02_spot_detail.png" width="230" alt="Spot Detail — Know before you go">
+  <img src="marketing/out/03_map.png"          width="230" alt="Map — Every spot on the map">
+</p>
+<p align="center">
+  <img src="marketing/out/04_saved.png"   width="230" alt="Saved — Build your shot list">
+  <img src="marketing/out/05_create.png"  width="230" alt="Create — Share where you stood">
+  <img src="marketing/out/06_review.png"  width="230" alt="Review — Rate it. Review it.">
+  <img src="marketing/out/07_profile.png" width="230" alt="Profile — Your spots, your story">
+</p>
+
+---
+
 ## What it does
 
 - **Explore** — a searchable, filterable, sortable feed of spots, each card a swipeable photo carousel. Paginated and geo-scoped to your location or a place you pick.
