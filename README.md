@@ -4,9 +4,9 @@
 
 Scout is a photographer-focused spot-discovery platform — find, view, review, and save great photo locations. Browse a searchable feed of spots backed by real photos from other photographers, see them on a map, and check the details that actually matter before you go: best light, gear, access, crowds, and seasons.
 
-This repository is the **whole project**: a native **SwiftUI iOS app** (`Scout/`) talking to a **FastAPI backend on Google Cloud Run** (`Scout-backend/`) over a versioned REST API, with Firebase providing auth, data, and photo storage.
+This repository is the **whole project**: a native **SwiftUI iOS app** (`Scout-iOS/`) talking to a **FastAPI backend on Google Cloud Run** (`Scout-backend/`) over a versioned REST API, with Firebase providing auth, data, and photo storage.
 
-> Each side has its own deep-dive README — [`Scout/README.md`](Scout/README.md) (iOS) and [`Scout-backend/README.md`](Scout-backend/README.md) (backend). This document is the system-level overview that ties them together.
+> Each side has its own deep-dive repositories — [`Scout IOS`](https://github.com/kkennethsieu/Scout-iOS) (iOS) and [`Scout Backend`](https://github.com/kkennethsieu/Scout-Backend) (backend). This document is the system-level overview that ties them together.
 
 ---
 
@@ -48,7 +48,6 @@ This repository is the **whole project**: a native **SwiftUI iOS app** (`Scout/`
 
 - The app authenticates **directly** with Firebase Auth and never sees a password on the backend. Every API call carries the Firebase **ID token** as `Authorization: Bearer <token>`; the backend verifies it with the Admin SDK and derives the user from the token's `uid`.
 - The **backend owns all user records and data.** The app only authenticates, forwards the token, and renders responses.
-- Wire format is **snake_case JSON, ISO-8601 dates**; photo uploads are **multipart/form-data** with JPEGs (the iOS client transcodes HEIC → JPEG before upload — see [`Scout-backend/docs/ios-upload-contract.md`](Scout-backend/docs/ios-upload-contract.md)).
 - Errors come back as a consistent `{ detail, code }` body so the client can branch on a stable `code` (e.g. `SPOT_ALREADY_EXISTS` carries the existing spot so the app can deep-link to it).
 
 ---
@@ -93,7 +92,7 @@ All endpoints except `/`, `/health`, and `/legal` require a Firebase Bearer toke
 | **Reviews** | `POST /spots/{id}/reviews`, `POST /spots/with-review` (new spot + first review atomically), `GET /reviews/{id}`, `DELETE /reviews/{id}` |
 | **Lists** | `GET /users/me/lists` (`{lists, memberships}` snapshot), `POST`/`PATCH`/`DELETE /users/me/lists[/{id}]`, `GET /users/me/lists/{id}/spots`, `PATCH /users/me/spots/{spot_id}/lists` (the single membership write path) |
 
-See [`Scout-backend/README.md`](Scout-backend/README.md) for the full contract, error codes, and review-submission vocabularies.
+See [`Scout Backend`](https://github.com/kkennethsieu/Scout-Backend) for the full contract, error codes, and review-submission vocabularies.
 
 ---
 
@@ -111,23 +110,6 @@ See [`Scout-backend/README.md`](Scout-backend/README.md) for the full contract, 
 ## Running the whole thing locally
 
 You generally run the backend (with Firebase emulators) and the iOS app on the Simulator together.
-
-**1. Backend** (`Scout-backend/`):
-
-```bash
-cd Scout-backend
-pip install -e ".[dev]"
-make emulators   # Terminal 1 — Firebase Emulator Suite
-make dev         # Terminal 2 — uvicorn --reload on :8000
-make test        # run unit + integration tests against the emulators
-```
-
-**2. iOS app** (`Scout/`):
-
-```bash
-cd Scout
-open Scout.xcodeproj
-```
 
 - Add your own `GoogleService-Info.plist` (gitignored) and set your signing team.
 - Point `BackendClient.baseURL` at your local backend (`http://127.0.0.1:8000`) for Simulator development, or leave it on the hosted Cloud Run URL.
